@@ -13,4 +13,3 @@ futures = "0.3.30"
 log = "0.4.22"
 simple_logger = { git = "https://github.com/fvacek/rust-simple_logger.git", branch = "main", features = ["stderr"] }
 futures-time = "3.0.0"
-tokio = "1.38.1"
