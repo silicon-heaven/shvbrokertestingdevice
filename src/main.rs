@@ -95,7 +95,7 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
                     let sigchng = RpcMessage::new_signal(NUMBER_MOUNT, SIG_CHNG, Some(param.into()));
                     let _ = client_cmd_tx.send_message(sigchng);
                 }
-                Some(Ok(true.into()))
+                Some(Ok(().into()))
             }
        }
     };
@@ -112,7 +112,7 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
                     let sigchng = RpcMessage::new_signal(TEXT_MOUNT, SIG_CHNG, Some(param.into()));
                     let _ = client_cmd_tx.send_message(sigchng);
                 }
-                Some(Ok(true.into()))
+                Some(Ok(().into()))
             }
        }
     };
@@ -120,7 +120,7 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
     //let init_task = move |client_cmd_tx, client_evt_rx| {
     //};
 
-    shvclient::Client::new_device(DotAppNode::new("simple_device_async_std"), DotDeviceNode::new("shvbroker_testing_device", "0.1", Some("00000".into())))
+    shvclient::Client::new_device(DotAppNode::new("shvbrokertestingdevice"), DotDeviceNode::new("shvbrokertestingdevice", "0.1", Some("00000".into())))
         .mount(NUMBER_MOUNT, number_node)
         .mount(TEXT_MOUNT, text_node)
         .with_app_state(state)
