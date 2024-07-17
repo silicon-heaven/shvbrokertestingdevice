@@ -1,0 +1,16 @@
+[package]
+name = "shvbrokertestingdevice"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shvproto = { git = "https://github.com/silicon-heaven/libshvproto-rs.git",  branch = "master" }
+shvrpc = { git = "https://github.com/silicon-heaven/libshvrpc-rs.git",  branch = "master" }
+shvclient = { git = "https://github.com/silicon-heaven/libshvclient-rs.git",  branch = "main", features = ["async_std"] }
+async-std = "1.12.0"
+clap = { version = "4.5.9", features = ["derive"] }
+futures = "0.3.30"
+log = "0.4.22"
+simple_logger = { git = "https://github.com/fvacek/rust-simple_logger.git", branch = "main", features = ["stderr"] }
+futures-time = "3.0.0"
+tokio = "1.38.1"
