@@ -86,10 +86,10 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
 
     let number_node: ClientNode<State> = shvclient::fixed_node!{
         number_node_handler(request, client_cmd_tx, app_state: State) {
-            "get" [IsGetter, Read] => {
+            "get" [IsGetter, Read, "Null", "Int"] => {
                     Some(Ok(app_state.number.load(Ordering::SeqCst).into()))
             }
-            "set" [IsSetter, Write] (param: i32) => {
+            "set" [IsSetter, Write, "Int", "Null"] (param: i32) => {
                 if app_state.number.load(Ordering::SeqCst) != param {
                     app_state.number.store(param, Ordering::SeqCst);
                     let sigchng = RpcMessage::new_signal(NUMBER_MOUNT, SIG_CHNG, Some(param.into()));
@@ -101,11 +101,11 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
     };
     let text_node = shvclient::fixed_node!{
         text_node_handler(request, client_cmd_tx, app_state: State) {
-            "get" [IsGetter, Read] => {
+            "get" [IsGetter, Read, "String", "Null"] => {
                 let s = &*app_state.text.read().await;
                 Some(Ok(s.into()))
             }
-            "set" [IsSetter, Write] (param: String) => {
+            "set" [IsSetter, Write, "Null", "String"] (param: String) => {
                 if &*app_state.text.read().await != &param {
                     let mut writer = app_state.text.write().await;
                     *writer = param.clone();
