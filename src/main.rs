@@ -4,7 +4,7 @@ use async_std::sync::RwLock;
 use clap::Parser;
 use log::*;
 use shvrpc::{client::ClientConfig, util::parse_log_verbosity};
-use shvrpc::{RpcMessage, RpcMessageMetaTags};
+use shvrpc::{RpcMessage};
 use shvclient::appnodes::{DotAppNode, DotDeviceNode};
 use shvclient::clientnode::{ClientNode, SIG_CHNG};
 use shvclient::{AppState};
