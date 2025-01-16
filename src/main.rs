@@ -9,6 +9,7 @@ use shvclient::appnodes::{DotAppNode, DotDeviceNode};
 use shvclient::clientnode::{ClientNode, SIG_CHNG};
 use shvclient::{AppState};
 use simple_logger::SimpleLogger;
+use url::Url;
 
 #[derive(Parser, Debug)]
 //#[structopt(name = "device", version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"), about = "SHV call")]
@@ -57,11 +58,17 @@ fn load_client_config(cli_opts: Opts) -> shvrpc::Result<ClientConfig> {
     } else {
         Default::default()
     };
-    config.url = cli_opts.url.unwrap_or(config.url);
+    config.url = match &cli_opts.url {
+        Some(url_str) => Url::parse(url_str)?,
+        None => config.url,
+    };
     config.device_id = cli_opts.device_id.or(config.device_id);
     config.mount = cli_opts.mount.or(config.mount);
-    config.reconnect_interval = cli_opts.reconnect_interval.or(config.reconnect_interval);
-    config.heartbeat_interval.clone_from(&cli_opts.heartbeat_interval);
+    config.reconnect_interval = match cli_opts.reconnect_interval {
+        Some(interval_str) => Some(duration_str::parse(interval_str)?),
+        None => config.reconnect_interval,
+    };
+    config.heartbeat_interval = duration_str::parse(cli_opts.heartbeat_interval)?;
     Ok(config)
 }
 
@@ -106,7 +113,7 @@ pub(crate) async fn main() -> shvrpc::Result<()> {
                 Some(Ok(s.into()))
             }
             "set" [IsSetter, Write, "Null", "String"] (param: String) => {
-                if &*app_state.text.read().await != &param {
+                if *app_state.text.read().await != param {
                     let mut writer = app_state.text.write().await;
                     *writer = param.clone();
                     let sigchng = RpcMessage::new_signal(TEXT_MOUNT, SIG_CHNG, Some(param.into()));
